@@ -19,29 +19,48 @@ import java.io.IOException;
 import java.util.List;
 
 public class JwtTokenValidator extends OncePerRequestFilter {
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
 
-        String jwt = request.getHeader(JwtConstant.JWT_HEADER);
+        String authHeader = request.getHeader(JwtConstant.JWT_HEADER);
 
-        if (jwt!=null){
-            jwt=jwt.substring(7);
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String jwt = authHeader.substring(7);
 
-            try{
+            try {
                 SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
-                Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
-                String email = String.valueOf(claims.get("email"));
-                String authorities = String.valueOf(claims.get("authorities"));
-                List<GrantedAuthority> authorityList = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
-                Authentication auth = new UsernamePasswordAuthenticationToken(email, null, authorityList);
+
+                Claims claims = Jwts.parserBuilder()
+                        .setSigningKey(key)
+                        .build()
+                        .parseClaimsJws(jwt)
+                        .getBody();
+
+                String email = claims.get("email", String.class);
+                String authorities = claims.get("authorities", String.class);
+
+                List<GrantedAuthority> authorityList =
+                        AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
+
+                Authentication auth =
+                        new UsernamePasswordAuthenticationToken(email, null, authorityList);
+
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
             } catch (Exception e) {
-                throw new RuntimeException("Invalid Token...................");
+                // IMPORTANT: do NOT crash public endpoints
+                SecurityContextHolder.clearContext();
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }
-
-
-            filterChain.doFilter(request,response);
         }
+
+        // ✅ ALWAYS continue
+        filterChain.doFilter(request, response);
     }
+
 }
