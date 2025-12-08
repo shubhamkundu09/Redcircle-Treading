@@ -3,7 +3,6 @@ package com.redcircle.controller;
 import com.redcircle.config.JwtProvider;
 import com.redcircle.modal.User;
 import com.redcircle.repo.UserRepo;
-import com.redcircle.request.LoginRequest;
 import com.redcircle.response.AuthResponse;
 import com.redcircle.service.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,16 +59,20 @@ public class AuthController {
 
 
     @PostMapping("/signin")
-    public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<AuthResponse> signin(@RequestBody User user){
         
-        String username = loginRequest.getEmail();
-        String password = loginRequest.getPassword();
+        String username = user.getEmail();
+        String password = user.getPassword();
 
         Authentication auth = authenticate(username,password);
 
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         String jwt = JwtProvider.generateToken(auth);
+
+        if (user.getTwoFactorAuth().isEnabled()){
+
+        }
 
         AuthResponse res = new AuthResponse();
         res.setStatus(true);
