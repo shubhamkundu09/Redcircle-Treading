@@ -1,7 +1,9 @@
 package com.redcircle.controller;
 
+import com.redcircle.config.JwtProvider;
 import com.redcircle.modal.User;
 import com.redcircle.repo.UserRepo;
+import com.redcircle.response.AuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ public class AuthController {
     private UserRepo userRepo;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@RequestBody User user){
+    public ResponseEntity<AuthResponse> signup(@RequestBody User user){
 
         User isExist = userRepo.findByEmail(user.getEmail());
         if (isExist!=null){
@@ -38,6 +40,13 @@ public class AuthController {
         Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword());
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        String jwt= JwtProvider.generateToken(auth);
+
+        AuthResponse res = new AuthResponse();
+        res.setJwt(jwt);
+        res.setMessage("Token Generated");
+        res.setStatus(true);
+
+        return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 }
