@@ -4,10 +4,12 @@ import com.redcircle.modal.TwoFactorOTP;
 import com.redcircle.modal.User;
 import com.redcircle.repo.TwoFactorOTPRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class TwoFactorOTPServiceImpl implements TwoFactorOTPService{
 
     @Autowired
