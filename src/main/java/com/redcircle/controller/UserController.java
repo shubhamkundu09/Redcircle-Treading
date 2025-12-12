@@ -2,8 +2,10 @@ package com.redcircle.controller;
 
 import com.redcircle.domain.VERIFICATION_TYPE;
 import com.redcircle.modal.User;
+import com.redcircle.modal.VerificationCode;
 import com.redcircle.service.EmailService;
 import com.redcircle.service.UserService;
+import com.redcircle.service.VerificationCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,9 @@ public class UserController {
 
     @Autowired
     private EmailService emailService;
+
+   @Autowired
+   private VerificationCodeService verificationCodeService;
 
     @GetMapping("/profile")
     public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String jwt){
