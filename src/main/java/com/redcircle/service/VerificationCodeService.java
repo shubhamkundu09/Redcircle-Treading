@@ -14,5 +14,7 @@ public interface VerificationCodeService {
 
     VerificationCode getVerificationCodeByUserId(Long id);
 
+
+
     void deleteVerificationCodeById(VerificationCode verificationCode);
 }
