@@ -2,7 +2,9 @@ package com.redcircle.service;
 
 import com.redcircle.domain.VERIFICATION_TYPE;
 import com.redcircle.modal.User;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface UserService {
 
     public User findUserByJwt(String jwt);
