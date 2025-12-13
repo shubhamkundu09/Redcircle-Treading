@@ -68,7 +68,7 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> signin(@RequestBody User user) throws MessagingException {
-        
+
         String username = user.getEmail();
         String password = user.getPassword();
 
@@ -116,18 +116,6 @@ public class AuthController {
 
     }
 
-    private Authentication authenticate(String username, String password) {
-        UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
-        if (userDetails==null){
-            throw new BadCredentialsException("Username is Invalid...............");
-        }
-
-        if (!password.equals(userDetails.getPassword())){
-            throw new BadCredentialsException("Password is Wrong....................");
-        }
-
-       return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
-    }
 
 
     @PostMapping("/2fa/otp/{otp}")
@@ -144,6 +132,20 @@ public class AuthController {
             return new ResponseEntity<>(authResponse, HttpStatus.OK);
         }
         throw new Exception("Invalid OTP");
+    }
+
+
+    private Authentication authenticate(String username, String password) {
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
+        if (userDetails==null){
+            throw new BadCredentialsException("Username is Invalid...............");
+        }
+
+        if (!password.equals(userDetails.getPassword())){
+            throw new BadCredentialsException("Password is Wrong....................");
+        }
+
+        return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
     }
 
 

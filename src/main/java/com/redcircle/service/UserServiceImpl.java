@@ -7,9 +7,11 @@ import com.redcircle.modal.User;
 import com.redcircle.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class UserServiceImpl implements UserService{
 
     @Autowired
@@ -65,3 +67,8 @@ public class UserServiceImpl implements UserService{
         return userRepo.save(user);
     }
 }
+
+
+
+
+

@@ -6,9 +6,11 @@ import com.redcircle.modal.VerificationCode;
 import com.redcircle.repo.VerificationCodeRepo;
 import com.redcircle.utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class VerificationCodeServiceImpl implements VerificationCodeService{
 
     @Autowired
@@ -46,3 +48,9 @@ public class VerificationCodeServiceImpl implements VerificationCodeService{
 
 
 }
+
+
+
+
+
+

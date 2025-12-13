@@ -59,8 +59,11 @@ public class JwtTokenValidator extends OncePerRequestFilter {
             }
         }
 
-        // ✅ ALWAYS continue
+
         filterChain.doFilter(request, response);
     }
 
 }
+
+
+
